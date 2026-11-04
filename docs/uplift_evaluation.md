@@ -14,18 +14,19 @@ assignment mechanism.
 
 ## Inverse-propensity policy evaluation
 
-For a policy recommendation \(d(X_i)\), the inverse-propensity-weighted
+For a policy recommendation `d(X_i)`, the inverse-propensity-weighted
 estimate is:
 
-\[
-\hat V(d) =
-\frac{1}{n}\sum_i
-\frac{I(A_i=d(X_i))Y_i}{e(A_i)}
-\]
+```text
+V_hat(d) = (1 / n) * sum over customers i of:
+           I(observed assignment A_i equals policy recommendation d(X_i))
+           * observed outcome Y_i
+           / assignment propensity e(A_i)
+```
 
-where \(A_i\) is the observed randomized assignment, \(Y_i\) is the observed
-visit outcome, \(e(A_i)\) is the probability of receiving that assignment,
-and \(d(X_i)\) is the treatment the policy would recommend.
+Here, `A_i` is the observed randomized assignment, `Y_i` is the observed visit
+outcome, `e(A_i)` is the probability of receiving that assignment, and
+`d(X_i)` is the treatment the policy would recommend.
 
 The Hillstrom experiment has approximately equal randomized assignment, so the
 evaluation uses \(e(A)=1/3\) for each of the three arms. Only rows whose
@@ -56,9 +57,10 @@ propensity weighting.
 
 The Qini-style value is:
 
-\[
-\text{Qini}(k)=\hat V(d_k)-\hat V(\text{always No E-Mail})
-\]
+```text
+Qini(k) = estimated policy value when targeting the top k customers
+          - estimated value when sending No E-Mail to everyone
+```
 
 The exported `qini_incremental_visits` column multiplies this rate difference
 by the held-out sample size. A positive value means that targeting the top

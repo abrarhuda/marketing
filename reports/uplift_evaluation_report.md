@@ -57,11 +57,10 @@ No E-Mail to the remainder.
 
 The exported Qini-style curve is:
 
-\[
-\operatorname{Qini}(k)
-= \widehat{V}(\text{target top } k)
-- \widehat{V}(\text{always No E-Mail})
-\]
+```text
+Qini(k) = estimated visit rate when targeting the top k customers
+          - estimated visit rate when sending No E-Mail to everyone
+```
 
 The Mens curve reached a maximum incremental visit rate of **7.66 percentage
 points** at approximately **99.9%** of the test set. Its trapezoidal area over
@@ -75,15 +74,17 @@ customers.
 
 ## Methodology
 
-For a policy \(d(X_i)\), the inverse-propensity estimate was:
+For a policy `d(X_i)`, the inverse-propensity estimate was:
 
-\[
-\hat V(d)=\frac{1}{n}\sum_i
-\frac{I(A_i=d(X_i))Y_i}{e(A_i)}
-\]
+```text
+V_hat(d) = (1 / n) * sum over customers i of:
+           I(observed assignment A_i equals policy recommendation d(X_i))
+           * observed outcome Y_i
+           / assignment propensity e(A_i)
+```
 
-where \(A_i\) is observed assignment, \(Y_i\) is observed visitation, and
-\(e(A_i)=1/3\) for each randomized arm. This uses only the observed outcome
+Here, `A_i` is observed assignment, `Y_i` is observed visitation, and
+`e(A_i) = 1/3` for each randomized arm. This uses only the observed outcome
 when the randomized assignment agrees with the policy recommendation.
 
 The bootstrap resampled complete held-out customer rows with replacement,
