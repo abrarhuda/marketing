@@ -38,26 +38,37 @@ evaluation. No test row influences preprocessing, tuning, or model selection.
 
 ### Logistic regression
 
-Logistic regression is used as an interpretable baseline. It estimates a linear
-relationship between features and the log-odds of a binary outcome:
+Logistic regression estimates the probability of a website visit from a
+weighted combination of customer features. The model first calculates:
 
 ```text
-log(p / (1 - p)) = beta_0 + beta_1*x_1 + ... + beta_k*x_k
+z = beta_0 + beta_1*x_1 + beta_2*x_2 + ... + beta_k*x_k
 ```
 
-The sigmoid transformation converts the log-odds into a probability. Numeric
-features are standardized and categorical features are one-hot encoded so the
-model can work with the mixed input data.
+The score becomes a probability between 0 and 1 through the sigmoid function:
+
+```text
+p(visit = 1) = 1 / (1 + e^(-z))
+```
+
+This model fits the binary visit target and provides probabilities that can be
+compared with observed visit rates. Numeric features are standardized and
+categorical features are one-hot encoded before the calculation.
 
 ### Decision tree
 
-A decision tree provides a simple nonlinear comparison. It learns a sequence of
-feature-based rules that divide customers into smaller groups. It can
-represent nonlinear patterns and interactions without requiring those
-relationships to be specified in advance.
+A decision tree predicts a class by applying a sequence of simple feature
+rules. A split might ask whether `history` is below a chosen value. The split
+creates smaller groups, and each final leaf estimates:
 
-A deep tree can memorize training data, so a small validation grid compares
-tree depths and minimum leaf sizes:
+```text
+predicted visit probability =
+number of visitors in the leaf / number of customers in the leaf
+```
+
+This model fits the customer data because visit behavior can vary across
+simple thresholds in history, recency, or other features. A small validation
+grid compares tree depths and minimum leaf sizes:
 
 - depth 3 with minimum leaf size 1;
 - depth 5 with minimum leaf size 1;
@@ -109,10 +120,10 @@ generated artifacts.
 
 ## Classification versus regression
 
-Classification is used to predict a category or probability, such as whether a
-customer visits (`0` or `1`). Regression predicts a continuous quantity, such
-as revenue. Classification is used here; revenue remains a separate analysis
-because its outcome distribution is zero-inflated and right-skewed.
+Classification predicts a category or probability, such as whether a customer
+visits (`0` or `1`). Regression predicts a continuous quantity, such as
+revenue. This project uses classification because the main machine-learning
+target is a yes-or-no visit outcome.
 
 ## Overfitting
 

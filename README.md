@@ -151,16 +151,39 @@ input features. The implementation uses:
 
 ### Logistic regression
 
-Logistic regression estimates the probability of a binary outcome. It is a
-useful first model because its coefficients and probability outputs are easier
-to explain than more complex models.
+Logistic regression estimates the probability of a website visit from a
+weighted combination of customer features. For a customer with feature values
+`x`, the model first calculates a score:
+
+```text
+z = beta_0 + beta_1*x_1 + beta_2*x_2 + ... + beta_k*x_k
+```
+
+The score is converted into a probability between 0 and 1:
+
+```text
+p(visit = 1) = 1 / (1 + e^(-z))
+```
+
+This model was used because the target has two outcomes, visit or no visit,
+and the resulting probabilities are easy to compare with the observed visit
+rate.
 
 ### Decision tree
 
-A decision tree learns a sequence of feature-based rules that divide customers
-into smaller groups. It can represent nonlinear patterns and is easy to
-visualize, but a deep tree can memorize training data. Tree depth and minimum
-leaf size are limited during validation to reduce overfitting.
+A decision tree predicts a class by applying a sequence of simple rules. For
+example, a split may ask whether `history` is below a chosen value. Each split
+creates smaller groups of customers. At a final leaf, the predicted
+probability is:
+
+```text
+predicted visit probability =
+number of visitors in the leaf / number of customers in the leaf
+```
+
+This model was used because customer history and channel may relate to visits
+through simple thresholds. Tree depth and minimum leaf size are selected with
+validation data so the rules remain useful beyond the training rows.
 
 These models estimate the likelihood of a website visit from the available
 pretreatment attributes. This prediction task is separate from measuring the
