@@ -1,0 +1,24 @@
+# Data directory
+
+Place the original MineThatData dataset in `data/raw/` and cleaned outputs in
+`data/processed/`. These directories are intentionally excluded from Git
+because downloaded and derived data should be managed locally.
+
+## Provenance
+
+The default pipeline URL is a pinned raw-file mirror:
+
+`https://raw.githubusercontent.com/TerraBaseAI/campaign-decisioning-engine/c44ae9aea5923533ffdaf34522e4937afd813c9e/data/hillstrom.csv`
+
+The mirror identifies the source as Kevin Hillstrom's 2008 MineThatData
+E-Mail Analytics and Data Mining Challenge. The original source description is
+available at <https://blog.minethatdata.com/2008/03/minethatdata-e-mail-analytics-and-data.html>.
+The source contains no customer identifier. The pipeline therefore creates
+`customer_id` from one-based source row position, and labels it as a surrogate.
+
+The source typo `Surburban` (in `zip_code`, where present) is preserved. Source
+category labels and the randomized `segment` assignment are not recoded.
+Column names are trimmed, lowercased, and converted to underscores. Numeric
+fields are parsed as numeric, and categorical fields use pandas string dtype.
+Exact duplicate feature rows are reported and retained because they do not
+identify duplicate customers. No observations are removed by this pipeline.

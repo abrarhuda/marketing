@@ -1,0 +1,42 @@
+.DS_Store
+.venv/
+venv/
+env/
+*.egg-info/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Downloaded datasets and local databases
+data/raw/*
+data/processed/*
+*.duckdb
+*.db
+*.sqlite
+*.sqlite3
+
+# Generated model artifacts and outputs
+models/
+artifacts/
+models/*
+*.pkl
+*.joblib
+*.onnx
+reports/figures/*
+reports/tables/*
+reports/*.csv
+
+# Temporary and notebook-generated files
+*.tmp
+*.temp
+*.log
+.ipynb_checkpoints/
+
+# Keep directory placeholders in the repository
+!.gitkeep
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!reports/figures/.gitkeep
