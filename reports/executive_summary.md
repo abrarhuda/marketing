@@ -120,12 +120,7 @@ change after receiving an email.
 
 ## 7. Next Steps
 
-1. Predefine a primary outcome, decision threshold, and sample-size target for
-   a prospective follow-up experiment.
-2. Capture email delivery, opens, clicks, unsubscribes, order margin, and
-   longer-term revenue.
-3. Compare model-assisted targeting rules with simple benchmark policies in a
-   new randomized sample.
-4. Evaluate additional feature engineering and probability-threshold choices
-   using validation data only.
-5. Monitor model performance after deployment for drift and calibration.
+1. Test the analysis on new campaign data.
+2. Add more customer and campaign information.
+3. Improve model validation and evaluation.
+4. Monitor results over time.

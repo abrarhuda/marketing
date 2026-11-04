@@ -326,5 +326,5 @@ remain the primary implementation.
   unsubscribes, or long-term customer value.
 - The experiment is historical and may not represent a future audience or
   channel mix.
-- Future work could add feature engineering, threshold selection based on
-  business costs, cross-validation, and prospective validation on a new sample.
+- Future improvements could include stronger validation, additional customer
+  information, and testing the approach on new campaign data.
