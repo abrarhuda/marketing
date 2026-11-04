@@ -2,7 +2,7 @@
 
 ## Purpose and scope
 
-I use this document as the statistical analysis plan for the Hillstrom
+This document defines the statistical analysis plan for the Hillstrom
 MineThatData Email Marketing Experiment. It is a **retrospective analysis
 plan** for an existing randomized dataset rather than a preregistered
 experiment.
@@ -31,9 +31,9 @@ analysis follows the **intention-to-treat** principle: customers are analyzed
 according to their randomized assignment, regardless of whether they visited,
 purchased, or were otherwise engaged.
 
-The source does not provide actual customer identifiers. I use a stable
-row-position surrogate only to relate records across my normalized DuckDB
-tables. I do not create additional customers or imply event timestamps.
+The source does not provide actual customer identifiers. A stable row-position
+surrogate is used only to relate records across the normalized DuckDB tables.
+No additional customers or event timestamps are implied.
 
 ## Outcomes and estimands
 

@@ -2,18 +2,17 @@
 
 ## 1. Executive Summary
 
-I analyzed Kevin Hillstrom's randomized MineThatData email experiment, covering
-64,000 customers assigned to No E-Mail, Mens E-Mail, or Womens E-Mail. I
-measured website visits, purchases, and revenue; tested
-treatment-versus-control differences; and trained introductory
-scikit-learn models to predict website visits from pretreatment customer
-attributes.
+The analysis covers Kevin Hillstrom's randomized MineThatData email experiment,
+with 64,000 customers assigned to No E-Mail, Mens E-Mail, or Womens E-Mail.
+Website visits, purchases, and revenue were measured, treatment-versus-control
+differences were tested, and introductory scikit-learn models were trained to
+predict website visits from pretreatment customer attributes.
 
-My central business conclusion is straightforward: promotional email increased
+The central business conclusion is straightforward: promotional email increased
 engagement in this experiment, with Mens E-Mail performing best on the main
-website-visit outcome. I use the models as an introduction to classification
-and to rank customers by predicted visit probability. I keep this prediction
-task separate from estimating the effect of a different email assignment.
+website-visit outcome. The models provide an introduction to classification and
+rank customers by predicted visit probability. This prediction task is
+separate from estimating the effect of a different email assignment.
 
 The five major takeaways are:
 
@@ -109,8 +108,7 @@ change after receiving an email.
 
 ## 6. Limitations
 
-- I use the models to predict visits rather than estimate individual treatment
-  effects.
+- The models predict visits rather than estimate individual treatment effects.
 - The available pretreatment features may not contain enough information for
   strong customer-level prediction.
 - Revenue is highly zero-inflated and right-skewed. Average revenue is

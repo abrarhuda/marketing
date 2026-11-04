@@ -1,17 +1,17 @@
 # Marketing Campaign A/B Testing & Introductory Machine Learning
 
-I built an end-to-end, reproducible marketing analytics project using a
-randomized email experiment and beginner-friendly scikit-learn classification
-models.
+This repository contains an end-to-end, reproducible marketing analytics
+project using a randomized email experiment and beginner-friendly
+scikit-learn classification models.
 
-I use the project to answer two practical questions:
+The project answers two practical questions:
 
 1. Do promotional emails increase website visits, purchases, and revenue
    compared with sending no email?
 2. Can basic machine learning predict which customers are more likely to visit?
 
-I focus on data ingestion, SQL, A/B testing, bootstrap confidence intervals,
-and introductory machine learning.
+The analysis focuses on data ingestion, SQL, A/B testing, bootstrap confidence
+intervals, and introductory machine learning.
 
 ## Technical skills demonstrated
 
@@ -27,7 +27,7 @@ and introductory machine learning.
 
 ## Dataset
 
-I use Kevin Hillstrom's **MineThatData E-Mail Analytics and Data
+The project uses Kevin Hillstrom's **MineThatData E-Mail Analytics and Data
 Mining Challenge**, a 64,000-customer randomized experiment.
 
 | Assignment | Role |
@@ -36,7 +36,7 @@ Mining Challenge**, a 64,000-customer randomized experiment.
 | `Mens E-Mail` | Promotional treatment A |
 | `Womens E-Mail` | Promotional treatment B |
 
-The source does not provide a customer identifier, so my ingestion module creates
+The source does not provide a customer identifier, so the ingestion module creates
 a stable one-based surrogate from source row position. Exact duplicate feature
 rows are reported and retained because they are not evidence of duplicate
 customers.
@@ -71,14 +71,14 @@ See [docs/architecture.md](docs/architecture.md) for the detailed data flow.
 
 ## SQL implementation
 
-I store the data in DuckDB using three related tables:
+The data is stored in DuckDB using three related tables:
 
 - `customers`: pretreatment customer attributes
 - `experiment_assignments`: randomized treatment assignment
 - `customer_outcomes`: visits, conversions, and spend
 
-I join these tables through the `customer_experiment_analysis` view. My SQL
-implementation demonstrates joins, CTEs, conditional aggregation, `CASE`,
+These tables are joined through the `customer_experiment_analysis` view. The
+SQL implementation demonstrates joins, CTEs, conditional aggregation, `CASE`,
 `COALESCE`, `NULLIF`, `ROW_NUMBER()`, and `PERCENT_RANK()`.
 
 Example from [sql/14_eda_history_visit.sql](sql/14_eda_history_visit.sql):
@@ -106,7 +106,7 @@ ORDER BY history_band;
 
 ## Experimental design and statistical analysis
 
-I use website visit as the primary outcome because it is more common than purchase
+Website visit is the primary outcome because it is more common than purchase
 conversion. Conversion and revenue per assigned customer are secondary
 outcomes.
 
@@ -117,7 +117,7 @@ H0: p_T - p_C = 0
 HA: p_T - p_C != 0
 ```
 
-I use two-proportion z-tests, absolute effects in percentage
+The analysis uses two-proportion z-tests, absolute effects in percentage
 points, relative lift, 95% confidence intervals, and Holm correction for the
 two primary visit comparisons. The significance level is `alpha = 0.05`.
 Revenue analysis includes every randomized customer, including customers with
@@ -131,14 +131,14 @@ Methodology details:
 
 ## Introductory machine learning
 
-My machine learning task is binary classification: I predict whether a
+The machine learning task is binary classification: it predicts whether a
 customer visits the website using pretreatment attributes only:
 
 `recency`, `history`, `history_segment`, `mens`, `womens`, `zip_code`, `newbie`,
 and `channel`.
 
-I do not use `visit`, `conversion`, `spend`, or treatment assignment as input
-features. My implementation uses:
+The models do not use `visit`, `conversion`, `spend`, or treatment assignment as
+input features. The implementation uses:
 
 - A stratified 60/20/20 train/validation/test split
 - `ColumnTransformer`
@@ -159,12 +159,12 @@ to explain than more complex models.
 
 A decision tree learns a sequence of feature-based rules that divide customers
 into smaller groups. It can represent nonlinear patterns and is easy to
-visualize, but a deep tree can memorize training data. I limited tree depth
-and minimum leaf size during validation to reduce overfitting.
+visualize, but a deep tree can memorize training data. Tree depth and minimum
+leaf size are limited during validation to reduce overfitting.
 
-I use these models to estimate the likelihood of a website visit from the
-available pretreatment attributes. I keep this prediction task separate from
-measuring the effect of changing a customer's email assignment.
+These models estimate the likelihood of a website visit from the available
+pretreatment attributes. This prediction task is separate from measuring the
+effect of changing a customer's email assignment.
 
 Implementation details are in [docs/machine_learning.md](docs/machine_learning.md)
 and [src/marketing_ab/machine_learning.py](src/marketing_ab/machine_learning.py).
@@ -201,7 +201,7 @@ Revenue differences, including all zero-spend customers, were:
 | Logistic regression | 0.627 | 0.405 | 0.122 |
 | Decision tree | 0.606 | 0.408 | 0.123 |
 
-Logistic regression performed better on my held-out comparison. Both models
+Logistic regression performed better on the held-out comparison. Both models
 produced no positive classifications at the default 0.50 threshold because
 the visit outcome is relatively rare; probability ranking and calibration are
 more informative than that threshold alone.
@@ -267,8 +267,8 @@ marketing-ab-visualizations
 
 ## Educational notebooks
 
-I use the notebooks to demonstrate the workflow while keeping reusable modules
-and SQL scripts as the primary implementation.
+The notebooks demonstrate the workflow while reusable modules and SQL scripts
+remain the primary implementation.
 
 | Notebook | What a reader learns |
 |---|---|
@@ -295,8 +295,7 @@ and SQL scripts as the primary implementation.
 
 ## Limitations and future improvements
 
-- I use the models to predict visits rather than estimate individual treatment
-  effects.
+- The models predict visits rather than estimate individual treatment effects.
 - Predictive performance is limited by the available pretreatment features.
 - Revenue is zero-inflated and right-skewed, so its mean is useful but
   incomplete as a business metric.

@@ -1,7 +1,7 @@
 # Marketing analysis visualization report
 
-I generate the figures in `reports/figures/` with the reusable module
-`marketing_ab.visualizations`. I regenerate them with:
+The figures in `reports/figures/` are generated with the reusable module
+`marketing_ab.visualizations`. They can be regenerated with:
 
 ```bash
 source .venv/bin/activate
@@ -52,7 +52,7 @@ automatically profit because campaign costs and margins are unavailable.
 
 ### 6. Historical spending distribution
 
-The overlaid distributions show that my pretreatment historical spending is
+The overlaid distributions show that pretreatment historical spending is
 similarly shaped across the randomized groups. The distributions are strongly
 right-skewed, with most customers at relatively low historical spend and a
 small high-spend tail. This skew explains why revenue uncertainty is more
@@ -60,7 +60,7 @@ difficult to summarize than a binary visit outcome.
 
 ### 7. Campaign results by customer segment
 
-I use the chart to show visit rates by the dataset's historical purchase-value
+The chart shows visit rates by the dataset's historical purchase-value
 segments and experiment group. Higher historical-value segments generally have
 higher engagement, and Mens E-Mail is above No E-Mail across the displayed
 segments. This is descriptive segmentation evidence; it is not a separate
@@ -77,10 +77,10 @@ metrics are more informative here than threshold metrics alone.
 
 ### 9. ROC curves and probability calibration
 
-I use the ROC chart to compare discrimination across thresholds and the
-calibration chart to compare predicted visit probabilities with observed visit
-frequencies. I interpret both alongside ROC-AUC, log loss, and Brier score.
-The plots use my saved final model bundles and held-out test split.
+The ROC chart compares discrimination across thresholds, while the calibration
+chart compares predicted visit probabilities with observed visit frequencies.
+Both are interpreted alongside ROC-AUC, log loss, and Brier score. The plots
+use saved final model bundles and the held-out test split.
 
 ## Design and reproducibility notes
 

@@ -13,4 +13,4 @@ Reusable modules for the marketing campaign experiment:
 - `visualizations.py` regenerates publication-quality figures.
 - `pipeline.py` orchestrates the complete workflow.
 
-I configure the command-line entry points in `pyproject.toml`.
+The command-line entry points are configured in `pyproject.toml`.
