@@ -444,20 +444,3 @@ primary implementation.
 - Future work could add cost-sensitive policy learning, cross-fitting,
   doubly robust policy evaluation, stronger uplift benchmarks, prospective
   validation, and long-term customer-value outcomes.
-
-## Why this is portfolio-ready
-
-From a hiring-manager perspective, this project demonstrates more than a
-notebook model:
-
-- It starts with a real, documented randomized dataset.
-- It preserves raw data and validates assumptions before analysis.
-- It uses SQL and a relational database rather than relying only on pandas.
-- It separates causal experimentation from predictive modeling.
-- It prevents leakage and reserves a held-out test set for final evaluation.
-- It reports uncertainty and limitations instead of overstating results.
-- It provides a reproducible CLI, tests, CI, generated artifacts, and clear
-  business recommendations.
-
-The concise executive-facing report is available at
-[reports/executive_summary.md](reports/executive_summary.md).
