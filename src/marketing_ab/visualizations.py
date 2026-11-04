@@ -16,7 +16,7 @@ from .machine_learning import split_modeling_data
 
 GROUP_ORDER = ["No E-Mail", "Mens E-Mail", "Womens E-Mail"]
 GROUP_COLORS = {"No E-Mail": "#4C566A", "Mens E-Mail": "#2E86AB", "Womens E-Mail": "#D95F59"}
-MODEL_COLORS = {"logistic_regression": "#2E86AB", "random_forest": "#D95F59"}
+MODEL_COLORS = {"logistic_regression": "#2E86AB", "decision_tree": "#D95F59"}
 FIGURE_SIZE = (8.5, 5.5)
 DPI = 220
 

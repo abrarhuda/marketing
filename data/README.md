@@ -17,12 +17,12 @@ The default pipeline URL is a pinned raw-file mirror:
 The mirror identifies the source as Kevin Hillstrom's 2008 MineThatData
 E-Mail Analytics and Data Mining Challenge. The original source description is
 available at <https://blog.minethatdata.com/2008/03/minethatdata-e-mail-analytics-and-data.html>.
-The source contains no customer identifier. The pipeline therefore creates
-`customer_id` from one-based source row position, and labels it as a surrogate.
+The source contains no customer identifier. I therefore create `customer_id`
+from one-based source row position and label it as a surrogate.
 
-The source typo `Surburban` (in `zip_code`, where present) is preserved. Source
-category labels and the randomized `segment` assignment are not recoded.
-Column names are trimmed, lowercased, and converted to underscores. Numeric
-fields are parsed as numeric, and categorical fields use pandas string dtype.
-Exact duplicate feature rows are reported and retained because they do not
-identify duplicate customers. No observations are removed by this pipeline.
+I preserve the source typo `Surburban` in `zip_code`, source category labels,
+and the randomized `segment` assignment. I trim, lowercase, and convert
+column names to underscores. I parse numeric fields as numeric and use pandas
+string dtype for categorical fields. I report and retain exact duplicate
+feature rows because they do not identify duplicate customers. I do not remove
+observations.

@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from sklearn.compose import ColumnTransformer
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (
     brier_score_loss,
@@ -24,6 +23,7 @@ from sklearn.metrics import (
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.tree import DecisionTreeClassifier
 
 from .database import build_database
 
@@ -130,18 +130,16 @@ def _candidate_pipelines(random_state: int) -> Dict[str, List[Pipeline]]:
             )
             for c in (0.1, 1.0, 10.0)
         ],
-        "random_forest": [
+        "decision_tree": [
             build_model_pipeline(
-                RandomForestClassifier(
-                    n_estimators=200,
+                DecisionTreeClassifier(
                     max_depth=depth,
                     min_samples_leaf=leaf,
                     random_state=random_state,
-                    n_jobs=-1,
                 ),
                 scale_numeric=False,
             )
-            for depth, leaf in ((None, 1), (12, 1), (12, 5))
+            for depth, leaf in ((3, 1), (5, 1), (8, 5))
         ],
     }
 

@@ -2,19 +2,18 @@
 
 ## 1. Executive Summary
 
-This project analyzed Kevin Hillstrom's randomized MineThatData email
-experiment, covering 64,000 customers assigned to No E-Mail, Mens E-Mail, or
-Womens E-Mail. The analysis measured website visits, purchases, and revenue;
-tested treatment-versus-control differences; and trained introductory
+I analyzed Kevin Hillstrom's randomized MineThatData email experiment, covering
+64,000 customers assigned to No E-Mail, Mens E-Mail, or Womens E-Mail. I
+measured website visits, purchases, and revenue; tested
+treatment-versus-control differences; and trained introductory
 scikit-learn models to predict website visits from pretreatment customer
 attributes.
 
-The central business conclusion is straightforward: promotional email
-increased engagement in this experiment, with Mens E-Mail performing best on
-the main website-visit outcome. The models provide a practical introduction to
-classification and help rank customers by predicted visit probability, but
-they do not estimate individual treatment effects or prove that a different
-email would cause a different outcome.
+My central business conclusion is straightforward: promotional email increased
+engagement in this experiment, with Mens E-Mail performing best on the main
+website-visit outcome. I use the models as an introduction to classification
+and to rank customers by predicted visit probability. I keep this prediction
+task separate from estimating the effect of a different email assignment.
 
 The five major takeaways are:
 
@@ -22,7 +21,7 @@ The five major takeaways are:
 2. Conversion and average revenue were also higher after email, but revenue is
    not profit.
 3. The primary visit-rate differences are statistically convincing.
-4. Logistic regression performed better than random forest on the held-out
+4. Logistic regression performed better than the decision tree on the held-out
    baseline prediction task.
 5. Predictive rankings should support future testing, not replace randomized
    measurement.
@@ -77,23 +76,23 @@ customer value, or the same result in every future audience.
 ## 4. Machine Learning Results
 
 The classification models predict website visits using only pretreatment
-features. Logistic regression performed better than random forest on the
+features. Logistic regression performed better than the decision tree on the
 held-out test set:
 
 - Logistic regression ROC-AUC: **0.627**
-- Random forest ROC-AUC: **0.593**
+- Decision tree ROC-AUC: **0.606**
 - Logistic regression log loss: **0.405**
-- Random forest log loss: **0.415**
+- Decision tree log loss: **0.408**
 - Logistic regression Brier score: **0.122**
-- Random forest Brier score: **0.125**
+- Decision tree Brier score: **0.123**
 
 Both models predicted no positive customers at the default 0.50 probability
 threshold because the visit outcome is relatively rare. Their probability
 metrics and rankings are more useful than a single threshold classification.
 
-These are predictive results, not causal findings. A customer with a high
-predicted visit probability is not necessarily a customer who would be
-changed by receiving an email.
+These results describe prediction performance. A customer with a high
+predicted visit probability is not necessarily a customer whose behavior would
+change after receiving an email.
 
 ## 5. Business Recommendations
 
@@ -110,7 +109,8 @@ changed by receiving an email.
 
 ## 6. Limitations
 
-- The models predict visits but do not estimate individual treatment effects.
+- I use the models to predict visits rather than estimate individual treatment
+  effects.
 - The available pretreatment features may not contain enough information for
   strong customer-level prediction.
 - Revenue is highly zero-inflated and right-skewed. Average revenue is

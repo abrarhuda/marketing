@@ -1,8 +1,8 @@
 # Project architecture
 
-The project is organized as a reproducible data-to-analysis pipeline. Raw
-source data is never overwritten, analytical transformations are explicit, and
-the predictive models use a reserved test set for final evaluation.
+I organized the project as a reproducible data-to-analysis pipeline. I never
+overwrite raw source data, I keep analytical transformations explicit, and I
+use a reserved test set for final model evaluation.
 
 ```mermaid
 flowchart TD
@@ -68,13 +68,13 @@ customer_outcomes(customer_id PRIMARY KEY, visit, conversion, spend,
                   FOREIGN KEY customer_id -> customers)
 ```
 
-This makes assignment, customer attributes, and outcomes explicit while
-retaining the one-row-per-customer structure of the original experiment. The
-analytical view provides a convenient read model for SQL, statistics, and
+This design makes assignment, customer attributes, and outcomes explicit while
+retaining the one-row-per-customer structure of the original experiment. I use
+the analytical view as a convenient read model for SQL, statistics, and
 machine learning.
 
 ## Leakage and evaluation boundaries
 
-Pretreatment features are separated from post-assignment outcomes. The
-predictive models use only the former. Model selection uses training and
-validation data; final predictive evaluation uses the held-out test partition.
+I separate pretreatment features from post-assignment outcomes and use only the
+former for prediction. I select models with training and validation data, then
+use the held-out test partition for final evaluation.

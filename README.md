@@ -1,16 +1,17 @@
 # Marketing Campaign A/B Testing & Introductory Machine Learning
 
-An end-to-end, reproducible marketing analytics project using a randomized
-email experiment and beginner-friendly scikit-learn classification models.
+I built an end-to-end, reproducible marketing analytics project using a
+randomized email experiment and beginner-friendly scikit-learn classification
+models.
 
-The project answers two practical questions:
+I use the project to answer two practical questions:
 
 1. Do promotional emails increase website visits, purchases, and revenue
    compared with sending no email?
 2. Can basic machine learning predict which customers are more likely to visit?
 
-The repository focuses on data ingestion, SQL, A/B testing, bootstrap
-confidence intervals, and introductory machine learning.
+I focus on data ingestion, SQL, A/B testing, bootstrap confidence intervals,
+and introductory machine learning.
 
 ## Technical skills demonstrated
 
@@ -20,13 +21,13 @@ confidence intervals, and introductory machine learning.
 | SQL | DuckDB schema, normalized tables, joins, CTEs, conditional aggregation, and window functions |
 | Experimentation | Treatment-versus-control comparisons, effect sizes, confidence intervals, and Holm correction |
 | Statistics | Two-proportion tests and customer-level bootstrap confidence intervals |
-| Machine learning | scikit-learn preprocessing pipelines, logistic regression, random forest, and standard classification metrics |
+| Machine learning | scikit-learn preprocessing pipelines, logistic regression, decision tree, and standard classification metrics |
 | Data engineering | Raw/processed separation, data-quality reports, relational integrity checks, and reproducible orchestration |
 | Quality assurance | pytest fixtures, reproducibility checks, Ruff linting, and GitHub Actions CI |
 
 ## Dataset
 
-The project uses Kevin Hillstrom's **MineThatData E-Mail Analytics and Data
+I use Kevin Hillstrom's **MineThatData E-Mail Analytics and Data
 Mining Challenge**, a 64,000-customer randomized experiment.
 
 | Assignment | Role |
@@ -35,7 +36,7 @@ Mining Challenge**, a 64,000-customer randomized experiment.
 | `Mens E-Mail` | Promotional treatment A |
 | `Womens E-Mail` | Promotional treatment B |
 
-The source does not provide a customer identifier. The ingestion module creates
+The source does not provide a customer identifier, so my ingestion module creates
 a stable one-based surrogate from source row position. Exact duplicate feature
 rows are reported and retained because they are not evidence of duplicate
 customers.
@@ -70,13 +71,13 @@ See [docs/architecture.md](docs/architecture.md) for the detailed data flow.
 
 ## SQL implementation
 
-DuckDB stores three related tables:
+I store the data in DuckDB using three related tables:
 
 - `customers`: pretreatment customer attributes
 - `experiment_assignments`: randomized treatment assignment
 - `customer_outcomes`: visits, conversions, and spend
 
-The `customer_experiment_analysis` view joins them for analysis. The SQL
+I join these tables through the `customer_experiment_analysis` view. My SQL
 implementation demonstrates joins, CTEs, conditional aggregation, `CASE`,
 `COALESCE`, `NULLIF`, `ROW_NUMBER()`, and `PERCENT_RANK()`.
 
@@ -105,7 +106,7 @@ ORDER BY history_band;
 
 ## Experimental design and statistical analysis
 
-Website visit is the primary outcome because it is more common than purchase
+I use website visit as the primary outcome because it is more common than purchase
 conversion. Conversion and revenue per assigned customer are secondary
 outcomes.
 
@@ -116,7 +117,7 @@ H0: p_T - p_C = 0
 HA: p_T - p_C != 0
 ```
 
-The implementation uses two-proportion z-tests, absolute effects in percentage
+I use two-proportion z-tests, absolute effects in percentage
 points, relative lift, 95% confidence intervals, and Holm correction for the
 two primary visit comparisons. The significance level is `alpha = 0.05`.
 Revenue analysis includes every randomized customer, including customers with
@@ -130,21 +131,21 @@ Methodology details:
 
 ## Introductory machine learning
 
-The machine learning task is binary classification: predict whether a
+My machine learning task is binary classification: I predict whether a
 customer visits the website using pretreatment attributes only:
 
 `recency`, `history`, `history_segment`, `mens`, `womens`, `zip_code`, `newbie`,
 and `channel`.
 
-The models do not use `visit`, `conversion`, `spend`, or treatment assignment
-as input features. The implementation uses:
+I do not use `visit`, `conversion`, `spend`, or treatment assignment as input
+features. My implementation uses:
 
 - A stratified 60/20/20 train/validation/test split
 - `ColumnTransformer`
 - `OneHotEncoder` for categorical features
 - `StandardScaler` for numeric features in logistic regression
 - Logistic regression as an interpretable baseline
-- Random forest as a nonlinear tree-based comparison
+- Decision tree as a simple nonlinear tree-based comparison
 - Small validation-based hyperparameter searches
 - Held-out ROC-AUC, precision, recall, F1, log loss, Brier score, and confusion matrices
 
@@ -154,14 +155,16 @@ Logistic regression estimates the probability of a binary outcome. It is a
 useful first model because its coefficients and probability outputs are easier
 to explain than more complex models.
 
-### Random forest
+### Decision tree
 
-A random forest combines many decision trees. It can model nonlinear patterns
-and interactions, but is generally less transparent than logistic regression
-and can overfit without careful evaluation.
+A decision tree learns a sequence of feature-based rules that divide customers
+into smaller groups. It can represent nonlinear patterns and is easy to
+visualize, but a deep tree can memorize training data. I limited tree depth
+and minimum leaf size during validation to reduce overfitting.
 
-The models are predictive, not causal. A strong prediction does not establish
-that changing a customer's treatment would cause a different outcome.
+I use these models to estimate the likelihood of a website visit from the
+available pretreatment attributes. I keep this prediction task separate from
+measuring the effect of changing a customer's email assignment.
 
 Implementation details are in [docs/machine_learning.md](docs/machine_learning.md)
 and [src/marketing_ab/machine_learning.py](src/marketing_ab/machine_learning.py).
@@ -196,9 +199,9 @@ Revenue differences, including all zero-spend customers, were:
 | Model | ROC-AUC | Log loss | Brier score |
 |---|---:|---:|---:|
 | Logistic regression | 0.627 | 0.405 | 0.122 |
-| Random forest | 0.593 | 0.415 | 0.125 |
+| Decision tree | 0.606 | 0.408 | 0.123 |
 
-Logistic regression performed better on this held-out baseline. Both models
+Logistic regression performed better on my held-out comparison. Both models
 produced no positive classifications at the default 0.50 threshold because
 the visit outcome is relatively rare; probability ranking and calibration are
 more informative than that threshold alone.
@@ -231,8 +234,8 @@ python -m pip install -e ".[dev]"
 marketing-ab-pipeline
 ```
 
-This downloads the real dataset if needed, validates it, builds the DuckDB
-database, exports SQL summaries, runs A/B tests and revenue analysis, trains
+This command downloads the real dataset if needed, validates it, builds the
+DuckDB database, exports SQL summaries, runs A/B tests and revenue analysis, trains
 the two scikit-learn models, evaluates them, and regenerates figures.
 Randomized operations use seed `42` by default.
 
@@ -264,14 +267,14 @@ marketing-ab-visualizations
 
 ## Educational notebooks
 
-The notebooks demonstrate the workflow while reusable modules and SQL scripts
-remain the primary implementation.
+I use the notebooks to demonstrate the workflow while keeping reusable modules
+and SQL scripts as the primary implementation.
 
 | Notebook | What a reader learns |
 |---|---|
 | [01 Exploratory data analysis](notebooks/01_exploratory_data_analysis.ipynb) | DuckDB queries, customer history, experiment balance, and behavioral patterns |
 | [02 A/B testing](notebooks/02_ab_testing.ipynb) | Hypotheses, effect sizes, confidence intervals, multiple-testing correction, and revenue bootstrap |
-| [03 Predictive modeling](notebooks/03_predictive_modeling.ipynb) | Feature selection, preprocessing, logistic regression, random forest, and evaluation |
+| [03 Predictive modeling](notebooks/03_predictive_modeling.ipynb) | Feature selection, preprocessing, logistic regression, decision tree, and evaluation |
 
 ## Repository structure
 
@@ -292,7 +295,8 @@ remain the primary implementation.
 
 ## Limitations and future improvements
 
-- The models predict visits but do not estimate individual treatment effects.
+- I use the models to predict visits rather than estimate individual treatment
+  effects.
 - Predictive performance is limited by the available pretreatment features.
 - Revenue is zero-inflated and right-skewed, so its mean is useful but
   incomplete as a business metric.
