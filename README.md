@@ -157,22 +157,21 @@ Website visit is the **primary outcome** because visits are more common than
 purchases. Purchase conversion and revenue per assigned customer are
 secondary outcomes.
 
-For each treatment \(T\), the primary comparison is:
+For each treatment `T`, the primary comparison is:
 
-\[
-H_0: p_T - p_C = 0
-\qquad
-H_A: p_T - p_C \ne 0
-\]
+```text
+H0: p_T - p_C = 0
+HA: p_T - p_C != 0
+```
 
-where \(C\) is `No E-Mail`. The implementation uses:
+where `C` is `No E-Mail`. The implementation uses:
 
 - Two-proportion z-tests from `statsmodels`
 - Absolute effects in percentage points
 - Relative percentage lift
 - 95% confidence intervals
 - Holm correction for the two primary treatment-versus-control tests
-- Alpha \(= 0.05\)
+- Significance level: `alpha = 0.05`
 - Exploratory secondary conversion comparisons
 - Customer-level bootstrap intervals for revenue differences
 
