@@ -1,8 +1,14 @@
 # Reports
 
-Generated figures belong in `reports/figures/`; generated tables belong in
-`reports/tables/`. These outputs are intentionally excluded from Git until
-the analysis pipeline produces them.
+The reports folder contains executive-facing findings, evaluation reports,
+and locally generated analysis artifacts.
+
+- `executive_summary.md` is the concise business-facing project summary.
+- `uplift_evaluation_report.md` documents held-out policy evaluation.
+- `figures/` receives generated PNG charts.
+- `tables/` receives generated SQL summary tables.
+- Generated CSVs, figures, and tables are intentionally excluded from Git
+  because they can be recreated by the pipeline.
 
 Revenue analysis outputs are generated under `reports/`:
 

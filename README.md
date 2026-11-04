@@ -410,21 +410,23 @@ primary implementation.
 │   ├── figures/                # Generated PNG charts
 │   └── *.csv, *.md             # Results tables and written reports
 ├── sql/                        # Schema, load, view, checks, and EDA queries
-├── src/marketing_ab/
-│   ├── data_ingestion.py       # Download, load, and validation orchestration
-│   ├── data_validation.py      # Cleaning rules and quality checks
-│   ├── database.py             # DuckDB schema, loading, joins, integrity
-│   ├── eda.py                  # SQL query execution and CSV exports
-│   ├── statistical_testing.py  # A/B tests and Holm-adjusted inference
-│   ├── revenue_analysis.py     # Revenue summaries and bootstrap intervals
-│   ├── machine_learning.py     # Leakage-safe predictive pipelines
-│   ├── uplift.py               # Three-arm logistic T-Learner
-│   ├── uplift_evaluation.py    # IPW policy evaluation and Qini curves
-│   ├── visualizations.py       # Artifact-driven figure generation
-│   └── pipeline.py             # Complete CLI orchestrator
+├── .github/workflows/          # Automated tests and linting
+├── src/                        # Installable source package
+│   └── marketing_ab/           # Reusable ingestion, analysis, ML, and CLI modules
+│       ├── data_ingestion.py   # Download, load, and validation orchestration
+│       ├── data_validation.py  # Cleaning rules and quality checks
+│       ├── database.py         # DuckDB schema, loading, joins, integrity
+│       ├── eda.py              # SQL query execution and CSV exports
+│       ├── statistical_testing.py # A/B tests and Holm-adjusted inference
+│       ├── revenue_analysis.py # Revenue summaries and bootstrap intervals
+│       ├── machine_learning.py # Leakage-safe predictive pipelines
+│       ├── uplift.py            # Three-arm logistic T-Learner
+│       ├── uplift_evaluation.py # IPW policy evaluation and Qini curves
+│       ├── visualizations.py   # Artifact-driven figure generation
+│       └── pipeline.py         # Complete CLI orchestrator
 ├── tests/                      # Unit and integration-style tests
 ├── pyproject.toml              # Dependencies and console scripts
-└── .github/workflows/          # Continuous integration
+└── .gitignore                  # Excluded local data, models, caches, and outputs
 ```
 
 ## Limitations and future improvements
