@@ -99,8 +99,8 @@ change after receiving an email.
    conversions, and revenue per assigned customer in this experiment.
 2. Preserve a randomized No E-Mail holdout in future campaigns so incremental
    performance can be measured directly.
-3. Use the introductory models for learning, prioritization, and planning
-   experiments rather than as proof of individual customer response.
+3. Use the introductory models for learning, prioritization, and experiment
+   planning. Individual customer response still requires testing with new data.
 4. Do not approve a profitability decision without campaign costs, margins,
    unsubscribe effects, and longer-term customer value.
 5. Validate any proposed customer segment or decision threshold in a new
@@ -108,7 +108,7 @@ change after receiving an email.
 
 ## 6. Limitations
 
-- The models predict visits rather than estimate individual treatment effects.
+- The models estimate whether a customer will visit.
 - The available pretreatment features may not contain enough information for
   strong customer-level prediction.
 - Revenue is highly zero-inflated and right-skewed. Average revenue is

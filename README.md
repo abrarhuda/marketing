@@ -318,7 +318,7 @@ remain the primary implementation.
 
 ## Limitations and future improvements
 
-- The models predict visits rather than estimate individual treatment effects.
+- The models estimate whether a customer will visit.
 - Predictive performance is limited by the available pretreatment features.
 - Revenue is zero-inflated and right-skewed, so its mean is useful but
   incomplete as a business metric.

@@ -84,9 +84,9 @@ Candidates are selected using validation ROC-AUC:
 - Logistic regression `C`: 0.1, 1.0, and 10.0.
 - Decision tree depth and minimum leaf-size combinations listed above.
 
-Validation-based selection is used rather than test-set tuning. Cross-validation
-would be a useful extension for a more stable estimate, but the current
-three-way split keeps the workflow easy to follow.
+Validation data selects model settings. The test set is reserved for final
+evaluation. Cross-validation could provide a more stable estimate in future
+work, while the current three-way split keeps the workflow easy to follow.
 
 ## Metrics
 
@@ -103,7 +103,8 @@ three-way split keeps the workflow easy to follow.
 
 Threshold metrics are calculated at 0.5 as a transparent baseline. Because
 website visitation is relatively rare, the project also reports probability
-metrics and ROC curves rather than relying on one classification threshold.
+metrics and ROC curves. These metrics show performance across classification
+thresholds.
 
 ## Why calibration matters
 

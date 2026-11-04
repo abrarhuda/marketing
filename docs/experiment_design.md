@@ -4,8 +4,8 @@
 
 This document defines the statistical analysis plan for the Hillstrom
 MineThatData Email Marketing Experiment. It is a **retrospective analysis
-plan** for an existing randomized dataset rather than a preregistered
-experiment.
+plan** for an existing randomized dataset. It was not created as a
+preregistered experiment.
 
 The business question is:
 
@@ -96,9 +96,8 @@ For treatment \(t\), the secondary estimand is:
 \Delta_{\text{revenue},t} = \bar{R}_t - \bar{R}_C
 \]
 
-This metric includes customers with zero spend. It therefore measures
-campaign revenue per assigned customer rather than average spend conditional on
-purchase.
+This metric includes customers with zero spend. It measures campaign revenue
+per assigned customer, including customers who did not purchase.
 
 ## Primary hypotheses
 
@@ -208,8 +207,8 @@ For each comparison, the report should include:
 - conclusion under the adjusted decision rule.
 
 The secondary outcomes should also report estimates and 95% confidence
-intervals. Their multiplicity status must be stated clearly rather than
-presenting them as additional primary confirmations.
+intervals. Their multiplicity status must be stated clearly. They are not
+additional primary confirmations.
 
 ## Multiple testing: Holm correction
 
