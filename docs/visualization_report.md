@@ -84,33 +84,6 @@ ROC-AUC alone does not establish that probabilities are useful for decisions.
 The plots are generated from the saved final model bundles and the held-out
 test split.
 
-### 10. Predicted uplift distributions
-
-The T-Learner estimates positive Mens uplift for every held-out customer in
-the saved predictions. Womens uplift is more variable and includes negative
-estimates for some customers. These are modeled counterfactual differences,
-not directly observed individual causal effects.
-
-### 11. Uplift evaluation curves
-
-The treatment-specific Qini-style curves evaluate whether ranking customers by
-estimated uplift concentrates incremental visits near the top of the ranking.
-The Mens curve reaches approximately 7.66 percentage points of incremental
-visit rate at nearly full targeting. The Womens curve reaches approximately
-4.73 points at about 94% targeting and ends at 4.59 points when everyone is
-targeted. In this dataset, the curves do not show a large, sharply concentrated
-high-uplift subgroup.
-
-### 12. Estimated performance of targeting policies
-
-Inverse-propensity-weighted held-out estimates are 10.59% for No E-Mail,
-18.26% for Mens E-Mail, 15.19% for Womens E-Mail, and 18.49% for the
-highest-positive-uplift policy. The model policy is estimated above
-always-Womens, but its 0.23-point advantage over always-Mens has a bootstrap
-95% interval from -0.84 to 1.27 points. The evaluation therefore does not
-establish that model targeting improves on simply sending Mens E-Mail to
-everyone.
-
 ## Design and reproducibility notes
 
 - PNG files use a consistent 8.5 by 5.5 inch base size and 220 DPI.
@@ -119,6 +92,4 @@ everyone.
   points.
 - Revenue charts use dollar formatting.
 - Confidence intervals are shown wherever saved analysis outputs provide them.
-- Uplift policy and ranking charts use inverse-propensity weighting rather than
-  comparing raw outcomes among recommended and non-recommended customers.
-- The reserved test set is not used to retune the predictive or uplift models.
+- The reserved test set is not used to retune the predictive models.

@@ -11,7 +11,7 @@ Coverage includes:
 - A/B testing calculations and Holm correction;
 - revenue bootstrap reproducibility;
 - feature exclusions and train/test split reproducibility;
-- T-Learner predictions and uplift policies; and
+- predictive-model feature exclusions and reproducible splits; and
 - complete pipeline stage orchestration.
 
 Run them from the repository root with:

@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "marketing-ab"
 version = "0.1.0"
-description = "A reproducible marketing campaign A/B testing and customer uplift modeling project."
+description = "A reproducible marketing campaign A/B testing and introductory machine learning project."
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "Educational portfolio project" }
@@ -40,8 +40,6 @@ marketing-ab-eda = "marketing_ab.eda:run_eda"
 marketing-ab-statistics = "marketing_ab.statistical_testing:run_statistical_analysis"
 marketing-ab-revenue = "marketing_ab.revenue_analysis:run_revenue_analysis"
 marketing-ab-ml = "marketing_ab.machine_learning:run_machine_learning_pipeline"
-marketing-ab-uplift = "marketing_ab.uplift:run_uplift_pipeline"
-marketing-ab-uplift-evaluation = "marketing_ab.uplift_evaluation:run_uplift_evaluation_pipeline"
 marketing-ab-visualizations = "marketing_ab.visualizations:run_visualizations"
 
 [tool.setuptools.packages.find]

@@ -344,7 +344,7 @@ documentation before outcome results are interpreted.
 
 The balance check will not remove observations or rebalance groups.
 
-## Why random assignment supports causal inference
+## Why random assignment supports fair comparisons
 
 Under proper random assignment, treatment assignment is independent of
 pre-treatment customer characteristics in expectation. Therefore, before

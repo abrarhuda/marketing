@@ -10,8 +10,6 @@ from .eda import export_eda_tables, validate_eda_metrics
 from .machine_learning import run_machine_learning
 from .revenue_analysis import analyze_revenue
 from .statistical_testing import run_ab_test_analysis
-from .uplift import run_uplift_modeling
-from .uplift_evaluation import run_uplift_evaluation
 from .visualizations import generate_all_figures
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -53,19 +51,8 @@ def run_full_pipeline(
             model_directory=root / "models",
             random_state=random_state,
         )
-        uplift_outputs = run_uplift_modeling(
-            connection,
-            output_directory=root / "reports",
-            model_directory=root / "models",
-            random_state=random_state,
-        )
     finally:
         connection.close()
-    uplift_evaluation_outputs = run_uplift_evaluation(
-        root / "reports/uplift_predictions.csv",
-        root / "reports",
-        random_state=random_state,
-    )
     figure_outputs = generate_all_figures(root)
     return {
         "ingestion": report,
@@ -74,8 +61,6 @@ def run_full_pipeline(
         "ab_testing": ab_results,
         "revenue": revenue_outputs,
         "machine_learning": ml_results,
-        "uplift": uplift_outputs,
-        "uplift_evaluation": uplift_evaluation_outputs,
         "visualizations": figure_outputs,
     }
 

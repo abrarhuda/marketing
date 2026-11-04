@@ -33,12 +33,6 @@ def test_pipeline_orchestration_runs_all_stages(monkeypatch, tmp_path) -> None:
     monkeypatch.setattr(
         "marketing_ab.pipeline.run_machine_learning", lambda *_args, **_kwargs: {}
     )
-    monkeypatch.setattr(
-        "marketing_ab.pipeline.run_uplift_modeling", lambda *_args, **_kwargs: {}
-    )
-    monkeypatch.setattr(
-        "marketing_ab.pipeline.run_uplift_evaluation", lambda *_args, **_kwargs: {}
-    )
     monkeypatch.setattr("marketing_ab.pipeline.generate_all_figures", lambda *_args: {})
 
     result = run_full_pipeline(tmp_path, download_if_missing=False)

@@ -9,8 +9,6 @@ from marketing_ab import (
     machine_learning,
     pipeline,
     statistical_testing,
-    uplift,
-    uplift_evaluation,
     visualizations,
 )
 
@@ -28,8 +26,6 @@ def test_package_imports() -> None:
             machine_learning,
             pipeline,
             statistical_testing,
-            uplift,
-            uplift_evaluation,
             visualizations,
         )
     )

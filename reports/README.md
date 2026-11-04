@@ -1,10 +1,9 @@
 # Reports
 
-The reports folder contains executive-facing findings, evaluation reports,
-and locally generated analysis artifacts.
+The reports folder contains executive-facing findings and locally generated
+analysis artifacts.
 
 - `executive_summary.md` is the concise business-facing project summary.
-- `uplift_evaluation_report.md` documents held-out policy evaluation.
 - `figures/` receives generated PNG charts.
 - `tables/` receives generated SQL summary tables.
 - Generated CSVs, figures, and tables are intentionally excluded from Git

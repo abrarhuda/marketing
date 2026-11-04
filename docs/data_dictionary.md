@@ -30,7 +30,7 @@ is a stable one-based surrogate generated from row position during ingestion.
 
 ## Modeling boundaries
 
-The predictive and uplift models use only:
+The predictive models use only:
 
 ```text
 recency
@@ -44,8 +44,8 @@ channel
 ```
 
 They exclude `treatment_group`, `visit`, `conversion`, and `spend` from the
-feature matrix. Treatment assignment is used to stratify partitions and to
-fit separate T-Learner arm models, not as a baseline predictive feature.
+feature matrix. Treatment assignment is used only to stratify partitions and
+is retained for experiment analysis, not used as a predictive feature.
 
 ## Validation rules
 

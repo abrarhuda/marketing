@@ -113,7 +113,7 @@ A model can rank customers well while producing probabilities that are too
 high or too low. If a model says 0.20 for a group of customers, calibration
 asks whether about 20% of that group actually visit. Calibrated probabilities
 are important for capacity planning, expected-value decisions, and future
-uplift targeting. The pipeline therefore reports log loss, Brier score, and a
+future decision-making. The pipeline therefore reports log loss, Brier score, and a
 calibration plot rather than relying on ROC-AUC alone.
 
 The saved model bundles contain the fitted preprocessing pipeline, selected

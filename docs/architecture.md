@@ -1,8 +1,8 @@
 # Project architecture
 
-The project is organized as a reproducible data-to-decision pipeline. Raw
+The project is organized as a reproducible data-to-analysis pipeline. Raw
 source data is never overwritten, analytical transformations are explicit, and
-the final policy comparison uses a reserved randomized test set.
+the predictive models use a reserved test set for final evaluation.
 
 ```mermaid
 flowchart TD
@@ -28,8 +28,7 @@ flowchart TD
         G --> I[A/B tests]
         G --> J[Revenue bootstrap]
         G --> K[Predictive ML]
-        G --> L[T-Learner uplift]
-        L --> M[Held-out policy evaluation]
+        G --> L[Predictive model evaluation]
     end
 
     subgraph Outputs
@@ -37,12 +36,10 @@ flowchart TD
         I --> O[Statistical results]
         J --> P[Revenue results]
         K --> Q[Model metrics and bundles]
-        M --> R[Policy metrics and Qini curves]
         N --> S[Reports and figures]
         O --> S
         P --> S
         Q --> S
-        R --> S
     end
 ```
 
@@ -56,8 +53,6 @@ flowchart TD
 | A/B testing | `statistical_testing.py` | Fixed definitions, Holm correction, explicit comparison direction |
 | Revenue | `revenue_analysis.py`, `sql/15` | Seed `42`, 2,000 customer-level bootstrap iterations, zero spend included |
 | Predictive ML | `machine_learning.py` | Seed `42`, stratified 60/20/20 split, preprocessing inside pipelines |
-| Uplift | `uplift.py` | Separate arm models, pretreatment features only, shared split logic |
-| Uplift evaluation | `uplift_evaluation.py` | Held-out predictions only, known one-third propensities, bootstrap seed `42` |
 | Visualization | `visualizations.py` | Figures regenerated from saved analysis artifacts |
 | Orchestration | `pipeline.py` | One documented command and consistent project-root paths |
 
@@ -82,7 +77,4 @@ machine learning.
 
 Pretreatment features are separated from post-assignment outcomes. The
 predictive models use only the former. Model selection uses training and
-validation data; final predictive and uplift evaluation uses the held-out
-test partition. The uplift policy is evaluated with inverse-propensity
-weighting rather than by comparing raw outcomes among recommended and
-non-recommended customers.
+validation data; final predictive evaluation uses the held-out test partition.

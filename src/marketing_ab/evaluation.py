@@ -1,4 +1,4 @@
-"""Evaluation helpers for predictive and uplift models."""
+"""Evaluation helpers for predictive models."""
 
 from collections.abc import Sequence
 from typing import Dict

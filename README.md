@@ -1,55 +1,28 @@
-# Marketing Campaign A/B Testing & Customer Uplift Modeling
+# Marketing Campaign A/B Testing & Introductory Machine Learning
 
 An end-to-end, reproducible marketing analytics project using a randomized
-email experiment to answer two business questions:
+email experiment and beginner-friendly scikit-learn classification models.
 
-1. **Do promotional emails increase customer engagement and revenue compared
-   with sending no email?**
-2. **Can customer-level modeling identify which email treatment is most
-   promising for each customer?**
+The project answers two practical questions:
 
-The project combines data engineering, SQL analytics, statistical
-experimentation, predictive machine learning, and causal/uplift modeling.
-It is designed as a portfolio example of how an analyst moves from raw data
-to defensible business recommendations.
+1. Do promotional emails increase website visits, purchases, and revenue
+   compared with sending no email?
+2. Can basic machine learning predict which customers are more likely to visit?
 
-> **Headline:** Both promotional emails increased website visits versus the
-> no-email control. Mens E-Mail was the strongest simple policy. The uplift
-> model produced a slightly higher point estimate than always sending Mens
-> E-Mail, but its confidence interval included no improvement, so personalized
-> targeting remains a challenger strategy rather than a proven replacement.
-
-## Project overview
-
-Marketing teams need to distinguish **incremental response** from activity that
-would have happened anyway. This project preserves the randomized experiment
-design, measures treatment effects against a no-email control, and then tests
-whether modeling can improve treatment selection.
-
-The workflow deliberately separates:
-
-- **Descriptive analysis:** who customers are and how outcomes vary.
-- **Causal experiment analysis:** what changed after random assignment.
-- **Predictive modeling:** which customers are likely to visit.
-- **Uplift modeling:** which treatment may change a customer's outcome relative
-  to another treatment.
-
-No ROI or profitability claim is made because campaign costs, margins,
-unsubscribes, and long-term customer value are not in the dataset.
+The repository focuses on data ingestion, SQL, A/B testing, bootstrap
+confidence intervals, and introductory machine learning.
 
 ## Technical skills demonstrated
 
 | Area | Implemented capability |
 |---|---|
-| Python | Reusable package modules, CLI entry points, validation, reporting |
-| SQL | DuckDB schema, normalized tables, analytical view, CTEs, joins, conditional aggregation, window functions |
-| Experimentation | Two-treatment-versus-control testing, effect sizes, confidence intervals, Holm correction |
-| Statistics | Two-proportion z-tests, bootstrap confidence intervals, uncertainty-aware interpretation |
-| Machine learning | scikit-learn pipelines, one-hot encoding, scaling, validation tuning, held-out evaluation |
-| Causal inference | Three-arm T-Learner, counterfactual predictions, inverse-propensity policy evaluation |
-| Data engineering | Raw/processed separation, data-quality reports, relational integrity checks, reproducible orchestration |
-| Communication | Educational notebooks, publication-quality figures, methodology documents, executive summary |
-| Quality assurance | pytest fixtures, reproducibility checks, Ruff linting, GitHub Actions CI |
+| Python | Reusable modules, validation, reporting, and command-line entry points |
+| SQL | DuckDB schema, normalized tables, joins, CTEs, conditional aggregation, and window functions |
+| Experimentation | Treatment-versus-control comparisons, effect sizes, confidence intervals, and Holm correction |
+| Statistics | Two-proportion tests and customer-level bootstrap confidence intervals |
+| Machine learning | scikit-learn preprocessing pipelines, logistic regression, random forest, and standard classification metrics |
+| Data engineering | Raw/processed separation, data-quality reports, relational integrity checks, and reproducible orchestration |
+| Quality assurance | pytest fixtures, reproducibility checks, Ruff linting, and GitHub Actions CI |
 
 ## Dataset
 
@@ -62,68 +35,52 @@ Mining Challenge**, a 64,000-customer randomized experiment.
 | `Mens E-Mail` | Promotional treatment A |
 | `Womens E-Mail` | Promotional treatment B |
 
-The source fields include customer history, demographics, assignment, website
-visits, purchases, and spend. The source does **not** provide a customer
-identifier, so ingestion creates a stable one-based surrogate from source row
-position and documents that decision. Exact duplicate feature rows are
-retained and reported; they are not assumed to be duplicate customers.
+The source does not provide a customer identifier. The ingestion module creates
+a stable one-based surrogate from source row position. Exact duplicate feature
+rows are reported and retained because they are not evidence of duplicate
+customers.
 
 **Source and provenance**
 
 - Original source description: [MineThatData E-Mail Analytics and Data Mining
   Challenge](https://blog.minethatdata.com/2008/03/minethatdata-e-mail-analytics-and-data.html)
-- Reproducible pinned mirror used by the pipeline:
+- Pinned mirror used by the pipeline:
   [hillstrom.csv](https://raw.githubusercontent.com/TerraBaseAI/campaign-decisioning-engine/c44ae9aea5923533ffdaf34522e4937afd813c9e/data/hillstrom.csv)
-- Detailed provenance and cleaning decisions:
-  [data/README.md](data/README.md)
-- Field-level reference:
-  [docs/data_dictionary.md](docs/data_dictionary.md)
+- Cleaning decisions: [data/README.md](data/README.md)
+- Field reference: [docs/data_dictionary.md](docs/data_dictionary.md)
 
 ## Project architecture
 
 ```mermaid
 flowchart LR
-    A[Hillstrom CSV<br/>64,000 randomized customers] --> B[Python ingestion<br/>download, normalize, validate]
-    B --> C[Validated CSV<br/>surrogate customer_id]
-    C --> D[DuckDB relational layer]
-    D --> D1[customers]
-    D --> D2[experiment_assignments]
-    D --> D3[customer_outcomes]
-    D --> E[customer_experiment_analysis view]
-    E --> F[SQL EDA<br/>CSV summaries]
-    E --> G[A/B testing<br/>visits, conversion, Holm correction]
-    E --> H[Revenue bootstrap<br/>all assigned customers]
-    E --> I[Predictive ML<br/>logistic regression, random forest]
-    E --> J[T-Learner uplift<br/>three treatment arms]
-    J --> K[Held-out policy evaluation<br/>IPW, bootstrap, Qini curves]
-    F --> L[Figures and reports]
-    G --> L
-    H --> L
-    I --> L
-    K --> L
+    A[Hillstrom CSV] --> B[Python ingestion and validation]
+    B --> C[Validated CSV]
+    C --> D[DuckDB relational database]
+    D --> E[SQL exploratory analysis]
+    D --> F[A/B tests]
+    D --> G[Revenue bootstrap]
+    D --> H[scikit-learn classification]
+    E --> I[Reports and figures]
+    F --> I
+    G --> I
+    H --> I
 ```
 
-See the standalone [architecture document](docs/architecture.md) for the
-pipeline stages, reproducibility controls, and artifact flow.
+See [docs/architecture.md](docs/architecture.md) for the detailed data flow.
 
 ## SQL implementation
 
-DuckDB is the main analytical engine. The original single table is represented
-as three related tables:
+DuckDB stores three related tables:
 
 - `customers`: pretreatment customer attributes
 - `experiment_assignments`: randomized treatment assignment
 - `customer_outcomes`: visits, conversions, and spend
 
-The `customer_experiment_analysis` view joins these tables for analysis while
-integrity checks confirm one assignment and one outcome per customer and no
-unexpected row multiplication.
+The `customer_experiment_analysis` view joins them for analysis. The SQL
+implementation demonstrates joins, CTEs, conditional aggregation, `CASE`,
+`COALESCE`, `NULLIF`, `ROW_NUMBER()`, and `PERCENT_RANK()`.
 
-The SQL layer demonstrates `SELECT`, `WHERE`, `GROUP BY`, `ORDER BY`,
-`CASE WHEN`, conditional aggregation, `COALESCE`, `NULLIF`, `INNER JOIN`,
-`LEFT JOIN`, CTEs, `ROW_NUMBER()`, and `PERCENT_RANK()`. For example, this
-actual project query bands historical spend and compares visitation while
-retaining the full assigned-customer denominator:
+Example from [sql/14_eda_history_visit.sql](sql/14_eda_history_visit.sql):
 
 ```sql
 WITH history_bands AS (
@@ -136,105 +93,80 @@ WITH history_bands AS (
             ELSE '04_1000_or_more'
         END AS history_band
     FROM customer_experiment_analysis
-    WHERE history IS NOT NULL
 )
 SELECT
     history_band,
     COUNT(*) AS assigned_customers,
-    AVG(history) AS average_historical_spend,
-    SUM(CASE WHEN visit = 1 THEN 1 ELSE 0 END) AS visitors,
     AVG(visit) AS visit_rate
 FROM history_bands
 GROUP BY history_band
 ORDER BY history_band;
 ```
 
-The source query is [sql/14_eda_history_visit.sql](sql/14_eda_history_visit.sql).
-
 ## Experimental design and statistical analysis
 
-Website visit is the **primary outcome** because visits are more common than
-purchases. Purchase conversion and revenue per assigned customer are
-secondary outcomes.
+Website visit is the primary outcome because it is more common than purchase
+conversion. Conversion and revenue per assigned customer are secondary
+outcomes.
 
-For each treatment `T`, the primary comparison is:
+For each treatment `T` versus the `No E-Mail` control `C`, the hypotheses are:
 
 ```text
 H0: p_T - p_C = 0
 HA: p_T - p_C != 0
 ```
 
-where `C` is `No E-Mail`. The implementation uses:
+The implementation uses two-proportion z-tests, absolute effects in percentage
+points, relative lift, 95% confidence intervals, and Holm correction for the
+two primary visit comparisons. The significance level is `alpha = 0.05`.
+Revenue analysis includes every randomized customer, including customers with
+zero spend, and uses a reproducible customer-level bootstrap.
 
-- Two-proportion z-tests from `statsmodels`
-- Absolute effects in percentage points
-- Relative percentage lift
-- 95% confidence intervals
-- Holm correction for the two primary treatment-versus-control tests
-- Significance level: `alpha = 0.05`
-- Exploratory secondary conversion comparisons
-- Customer-level bootstrap intervals for revenue differences
+Methodology details:
 
-Random assignment supports causal interpretation of treatment-versus-control
-differences under the experiment assumptions. It does not prove that the same
-effect will hold for every future audience or that revenue increases imply
-profitability.
+- [docs/experiment_design.md](docs/experiment_design.md)
+- [docs/ab_testing_results.md](docs/ab_testing_results.md)
+- [docs/revenue_analysis.md](docs/revenue_analysis.md)
 
-Methodology details are in [docs/experiment_design.md](docs/experiment_design.md),
-[docs/ab_testing_results.md](docs/ab_testing_results.md), and
-[docs/revenue_analysis.md](docs/revenue_analysis.md).
+## Introductory machine learning
 
-## Machine learning and uplift modeling
-
-### Predictive classification
-
-The predictive task is to estimate whether a customer visits the website using
-only pretreatment attributes:
+The machine learning task is binary classification: predict whether a
+customer visits the website using pretreatment attributes only:
 
 `recency`, `history`, `history_segment`, `mens`, `womens`, `zip_code`, `newbie`,
 and `channel`.
 
-The project explicitly excludes `treatment_group`, `visit`, `conversion`, and
-`spend` from model features. It uses:
+The models do not use `visit`, `conversion`, `spend`, or treatment assignment
+as input features. The implementation uses:
 
-- 60/20/20 train/validation/held-out test partitions
-- Stratification by treatment group and visit outcome
+- A stratified 60/20/20 train/validation/test split
 - `ColumnTransformer`
 - `OneHotEncoder` for categorical features
-- `StandardScaler` for logistic regression numeric features
-- Logistic regression
-- Random forest classification
-- ROC-AUC, precision, recall, F1, log loss, Brier score, confusion matrices,
-  ROC curves, and calibration plots
+- `StandardScaler` for numeric features in logistic regression
+- Logistic regression as an interpretable baseline
+- Random forest as a nonlinear tree-based comparison
+- Small validation-based hyperparameter searches
+- Held-out ROC-AUC, precision, recall, F1, log loss, Brier score, and confusion matrices
 
-### Three-arm T-Learner uplift model
+### Logistic regression
 
-The T-Learner fits one outcome model per randomized arm:
+Logistic regression estimates the probability of a binary outcome. It is a
+useful first model because its coefficients and probability outputs are easier
+to explain than more complex models.
 
-\[
-\widehat{\tau}_{Mens}(X)
- =
-\widehat{P}(visit=1\mid X, Mens)
- -
-\widehat{P}(visit=1\mid X, No\ E-Mail)
-\]
+### Random forest
 
-The same calculation is performed for `Womens E-Mail`. The model estimates
-counterfactual probabilities; it does not observe all three outcomes for any
-one customer. Final policy evaluation uses only the reserved held-out test
-set, known one-third assignment propensities, inverse-propensity weighting,
-customer-level bootstrap intervals, and treatment-specific ranking/Qini curves.
+A random forest combines many decision trees. It can model nonlinear patterns
+and interactions, but is generally less transparent than logistic regression
+and can overfit without careful evaluation.
 
-Details:
+The models are predictive, not causal. A strong prediction does not establish
+that changing a customer's treatment would cause a different outcome.
 
-- [docs/machine_learning.md](docs/machine_learning.md)
-- [docs/uplift_modeling.md](docs/uplift_modeling.md)
-- [docs/uplift_evaluation.md](docs/uplift_evaluation.md)
+Implementation details are in [docs/machine_learning.md](docs/machine_learning.md)
+and [src/marketing_ab/machine_learning.py](src/marketing_ab/machine_learning.py).
 
 ## Verified results
-
-All values below come from generated project artifacts, not illustrative
-examples. Re-run the pipeline to regenerate them.
 
 ### Experiment outcomes
 
@@ -247,80 +179,32 @@ examples. Re-run the pipeline to regenerate them.
 
 Relative to `No E-Mail`, the primary visit effects were:
 
-| Comparison | Absolute effect | 95% CI | Holm-adjusted p-value | Decision at 0.05 |
-|---|---:|---:|---:|---|
-| Mens E-Mail | +7.66 percentage points | +7.00 to +8.32 points | < 0.001 | Reject null |
-| Womens E-Mail | +4.52 percentage points | +3.89 to +5.16 points | < 0.001 | Reject null |
+| Comparison | Absolute effect | 95% CI | Holm-adjusted p-value |
+|---|---:|---:|---:|
+| Mens E-Mail | +7.66 percentage points | +7.00 to +8.32 points | < 0.001 |
+| Womens E-Mail | +4.52 percentage points | +3.89 to +5.16 points | < 0.001 |
 
-Both promotional emails increased visits in this experiment. Conversion effects
-were also positive, but conversion is explicitly secondary and rarer. Revenue
-differences, including all $0 spenders, were:
+Revenue differences, including all zero-spend customers, were:
 
 | Comparison | Mean difference | Bootstrap 95% CI |
 |---|---:|---:|
 | Mens E-Mail vs No E-Mail | $0.77 | $0.50 to $1.07 |
 | Womens E-Mail vs No E-Mail | $0.42 | $0.18 to $0.69 |
 
-![Website visit rates by treatment group](reports/figures/02_visit_rates_by_group.png)
+### Predictive model results
 
-![Visit treatment effects with confidence intervals](reports/figures/04_visit_effects_confidence_intervals.png)
+| Model | ROC-AUC | Log loss | Brier score |
+|---|---:|---:|---:|
+| Logistic regression | 0.627 | 0.405 | 0.122 |
+| Random forest | 0.593 | 0.415 | 0.125 |
 
-![Average revenue by treatment group](reports/figures/05_average_revenue_by_group.png)
+Logistic regression performed better on this held-out baseline. Both models
+produced no positive classifications at the default 0.50 threshold because
+the visit outcome is relatively rare; probability ranking and calibration are
+more informative than that threshold alone.
 
-### Predictive modeling
-
-| Model | ROC-AUC | Log loss | Brier score | Precision at 0.50 | Recall at 0.50 |
-|---|---:|---:|---:|---:|---:|
-| Logistic regression | 0.627 | 0.405 | 0.122 | 0.000 | 0.000 |
-| Random forest | 0.593 | 0.415 | 0.125 | 0.000 | 0.000 |
-
-Logistic regression had better held-out ranking and calibration metrics in this
-baseline. Both models produced no positive classifications at the default
-0.50 threshold because the outcome is relatively rare; probabilities and
-ranking are therefore more informative than that threshold alone.
-
-![Predictive model performance](reports/figures/08_model_performance_comparison.png)
-
-![ROC curves](reports/figures/09_roc_curves.png)
-
-### Uplift policy evaluation
-
-Policy values are estimated website visit rates on the held-out test set using
-inverse-propensity weighting:
-
-| Policy | Estimated visit rate |
-|---|---:|
-| No E-Mail for everyone | 10.59% |
-| Mens E-Mail for everyone | 18.26% |
-| Womens E-Mail for everyone | 15.19% |
-| Highest positive estimated uplift | 18.49% |
-
-The model policy was **+0.23 percentage points** versus always sending Mens
-E-Mail, with a bootstrap 95% interval of **−0.84 to +1.27 points**. It was
-**+3.30 points** versus always sending Womens E-Mail, with an interval of
-**+1.97 to +4.80 points**. The first interval includes zero, so the model did
-not establish a clear advantage over the simple Mens benchmark.
-
-![Uplift evaluation curves](reports/figures/11_uplift_evaluation_curves.png)
-
-![Targeting policy performance](reports/figures/12_targeting_policy_performance.png)
-
-## Business recommendations
-
-1. **Use Mens E-Mail as the current simple benchmark.** It led on visit rate,
-   conversion rate, revenue per assigned customer, and held-out always-send
-   policy value.
-2. **Keep a randomized no-email holdout.** It is necessary to measure
-   incremental response rather than confusing natural activity with campaign
-   impact.
-3. **Treat uplift targeting as an experimental challenger.** Its point estimate
-   was slightly above always-Mens, but uncertainty does not establish a clear
-   improvement.
-4. **Do not approve a profitability decision from these results alone.** Add
-   campaign costs, margin, unsubscribes, and longer-term customer value.
-5. **Validate segmentation in a new randomized sample.** Test whether
-   recency, historical value, and customer segments show reproducible
-   incremental treatment differences before turning them into targeting rules.
+Figures are generated in [reports/figures/](reports/figures/), including visit
+rates, revenue, model performance, ROC curves, and calibration.
 
 ## Installation and reproduction
 
@@ -333,8 +217,8 @@ not establish a clear advantage over the simple Mens benchmark.
 ### Setup
 
 ```bash
-git clone <your-repository-url>
-cd tech-proj2
+git clone https://github.com/abrarhuda/marketing-campaign-uplift.git
+cd marketing-campaign-uplift
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
@@ -347,19 +231,16 @@ python -m pip install -e ".[dev]"
 marketing-ab-pipeline
 ```
 
-The command downloads the real dataset if needed, writes the validated
-processed data and DuckDB database, exports SQL summaries, runs statistical
-and machine-learning analyses, evaluates uplift policies, and regenerates
-figures. Randomized operations use seed `42` by default.
+This downloads the real dataset if needed, validates it, builds the DuckDB
+database, exports SQL summaries, runs A/B tests and revenue analysis, trains
+the two scikit-learn models, evaluates them, and regenerates figures.
+Randomized operations use seed `42` by default.
 
 To require a previously downloaded raw file:
 
 ```bash
 marketing-ab-pipeline --no-download
 ```
-
-The pipeline never substitutes synthetic data for the real analysis. Test-only
-fixtures are small synthetic datasets used for unit tests and CI.
 
 ### Run tests and linting
 
@@ -378,68 +259,46 @@ marketing-ab-eda
 marketing-ab-statistics
 marketing-ab-revenue
 marketing-ab-ml
-marketing-ab-uplift
-marketing-ab-uplift-evaluation
 marketing-ab-visualizations
 ```
 
 ## Educational notebooks
 
-The notebooks are walkthroughs; reusable modules and SQL scripts are the
-primary implementation.
+The notebooks demonstrate the workflow while reusable modules and SQL scripts
+remain the primary implementation.
 
 | Notebook | What a reader learns |
 |---|---|
 | [01 Exploratory data analysis](notebooks/01_exploratory_data_analysis.ipynb) | DuckDB queries, customer history, experiment balance, and behavioral patterns |
 | [02 A/B testing](notebooks/02_ab_testing.ipynb) | Hypotheses, effect sizes, confidence intervals, multiple-testing correction, and revenue bootstrap |
-| [03 Predictive modeling](notebooks/03_predictive_modeling.ipynb) | Leakage-safe preprocessing, classification models, evaluation, and calibration |
-| [04 Uplift modeling](notebooks/04_uplift_modeling.ipynb) | Potential outcomes, T-Learners, counterfactual predictions, and held-out policy evaluation |
+| [03 Predictive modeling](notebooks/03_predictive_modeling.ipynb) | Feature selection, preprocessing, logistic regression, random forest, and evaluation |
 
 ## Repository structure
 
 ```text
 .
-├── data/
-│   ├── raw/                    # Downloaded source data; ignored by Git
-│   └── processed/              # Validated CSV, DuckDB, quality report; ignored
-├── docs/                       # Methodology, architecture, data dictionary
-├── models/                     # Local joblib artifacts; ignored by Git
-├── notebooks/                  # Educational end-to-end walkthroughs
-├── reports/
-│   ├── figures/                # Generated PNG charts
-│   └── *.csv, *.md             # Results tables and written reports
-├── sql/                        # Schema, load, view, checks, and EDA queries
-├── .github/workflows/          # Automated tests and linting
-├── src/                        # Installable source package
-│   └── marketing_ab/           # Reusable ingestion, analysis, ML, and CLI modules
-│       ├── data_ingestion.py   # Download, load, and validation orchestration
-│       ├── data_validation.py  # Cleaning rules and quality checks
-│       ├── database.py         # DuckDB schema, loading, joins, integrity
-│       ├── eda.py              # SQL query execution and CSV exports
-│       ├── statistical_testing.py # A/B tests and Holm-adjusted inference
-│       ├── revenue_analysis.py # Revenue summaries and bootstrap intervals
-│       ├── machine_learning.py # Leakage-safe predictive pipelines
-│       ├── uplift.py            # Three-arm logistic T-Learner
-│       ├── uplift_evaluation.py # IPW policy evaluation and Qini curves
-│       ├── visualizations.py   # Artifact-driven figure generation
-│       └── pipeline.py         # Complete CLI orchestrator
-├── tests/                      # Unit and integration-style tests
-├── pyproject.toml              # Dependencies and console scripts
-└── .gitignore                  # Excluded local data, models, caches, and outputs
+├── data/                    # Raw and validated data; local files are ignored
+├── docs/                    # Methodology, architecture, and data dictionary
+├── models/                  # Local scikit-learn joblib artifacts; ignored
+├── notebooks/               # Educational walkthroughs
+├── reports/                 # Results tables, figures, and executive summary
+├── sql/                     # Database schema, loading, checks, and EDA queries
+├── .github/workflows/       # Automated tests and linting
+├── src/marketing_ab/        # Reusable ingestion, analysis, ML, and CLI modules
+├── tests/                   # Unit and integration-style tests
+├── pyproject.toml           # Dependencies and console scripts
+└── .gitignore               # Excluded local data, models, caches, and outputs
 ```
 
 ## Limitations and future improvements
 
-- The dataset has one observed outcome per customer; individual counterfactual
-  outcomes are never directly observed.
-- Uplift values are modeled estimates and may reflect model misspecification,
-  sampling noise, feature design, and regularization.
-- The source does not include costs, profit margins, delivery/open/click data,
-  unsubscribes, or long-term value.
-- Revenue is highly zero-inflated and right-skewed, so its mean is useful but
+- The models predict visits but do not estimate individual treatment effects.
+- Predictive performance is limited by the available pretreatment features.
+- Revenue is zero-inflated and right-skewed, so its mean is useful but
   incomplete as a business metric.
+- The source does not include costs, profit margins, delivery/open/click data,
+  unsubscribes, or long-term customer value.
 - The experiment is historical and may not represent a future audience or
   channel mix.
-- Future work could add cost-sensitive policy learning, cross-fitting,
-  doubly robust policy evaluation, stronger uplift benchmarks, prospective
-  validation, and long-term customer-value outcomes.
+- Future work could add feature engineering, threshold selection based on
+  business costs, cross-validation, and prospective validation on a new sample.

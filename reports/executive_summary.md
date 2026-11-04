@@ -5,18 +5,16 @@
 This project analyzed Kevin Hillstrom's randomized MineThatData email
 experiment, covering 64,000 customers assigned to No E-Mail, Mens E-Mail, or
 Womens E-Mail. The analysis measured website visits, purchases, and revenue;
-tested treatment-versus-control differences; built predictive models; and
-evaluated whether customer-level uplift targeting could improve campaign
-responsiveness.
+tested treatment-versus-control differences; and trained introductory
+scikit-learn models to predict website visits from pretreatment customer
+attributes.
 
 The central business conclusion is straightforward: promotional email
 increased engagement in this experiment, with Mens E-Mail performing best on
-the main website-visit outcome. The uplift model produced a targeting policy
-that was slightly better than always sending Mens E-Mail in point estimate,
-but the difference was too uncertain to establish a clear advantage. The
-results support email experimentation and favor Mens E-Mail as the current
-simple benchmark, not an unqualified claim that personalized targeting or
-profitability has been proven.
+the main website-visit outcome. The models provide a practical introduction to
+classification and help rank customers by predicted visit probability, but
+they do not estimate individual treatment effects or prove that a different
+email would cause a different outcome.
 
 The five major takeaways are:
 
@@ -24,12 +22,12 @@ The five major takeaways are:
 2. Conversion and average revenue were also higher after email, but revenue is
    not profit.
 3. The primary visit-rate differences are statistically convincing.
-4. Logistic regression provided modest predictive ranking ability.
-5. Uplift targeting did not clearly outperform always sending Mens E-Mail.
+4. Logistic regression performed better than random forest on the held-out
+   baseline prediction task.
+5. Predictive rankings should support future testing, not replace randomized
+   measurement.
 
 ## 2. Experimental Results
-
-### Website visits
 
 Website visit rates were:
 
@@ -41,11 +39,6 @@ Compared with No E-Mail, the estimated absolute visit-rate effects were:
 
 - Mens E-Mail: **+7.66 percentage points**
 - Womens E-Mail: **+4.52 percentage points**
-
-The experiment groups were approximately balanced, with about 21,300
-customers in each group. This supports a fair randomized comparison.
-
-### Purchases and revenue
 
 Purchase conversion rates were:
 
@@ -78,95 +71,63 @@ results are less stable than the visit analysis. Revenue intervals were
 estimated with 2,000 customer-level bootstrap resamples and remained above
 zero for both promotional emails.
 
-Statistical significance means the observed differences are unlikely to be
-explained by random assignment variation alone under the stated test
-assumptions. It does not establish campaign profitability, long-term customer
-value, or the same result in every future audience.
+Statistical significance does not establish campaign profitability, long-term
+customer value, or the same result in every future audience.
 
 ## 4. Machine Learning Results
 
-### Predictive model performance
-
-The logistic regression model performed better than the random forest on the
-held-out website-visit prediction task:
+The classification models predict website visits using only pretreatment
+features. Logistic regression performed better than random forest on the
+held-out test set:
 
 - Logistic regression ROC-AUC: **0.627**
 - Random forest ROC-AUC: **0.593**
+- Logistic regression log loss: **0.405**
+- Random forest log loss: **0.415**
+- Logistic regression Brier score: **0.122**
+- Random forest Brier score: **0.125**
 
-Logistic regression also had lower log loss (**0.405 versus 0.415**) and a
-lower Brier score (**0.122 versus 0.125**). Both models predicted no positive
-customers at the default 0.50 probability threshold, so their probabilities
-and rankings are more useful than a simple threshold classification.
+Both models predicted no positive customers at the default 0.50 probability
+threshold because the visit outcome is relatively rare. Their probability
+metrics and rankings are more useful than a single threshold classification.
 
-### Uplift targeting
-
-The three-arm logistic-regression T-Learner estimated visit probabilities under
-No E-Mail, Mens E-Mail, and Womens E-Mail for each held-out customer. Policy
-performance was estimated with inverse-propensity weighting using the known
-one-third randomized assignment probabilities:
-
-- No E-Mail for everyone: **10.59%**
-- Mens E-Mail for everyone: **18.26%**
-- Womens E-Mail for everyone: **15.19%**
-- Highest positive estimated uplift: **18.49%**
-
-The model-based policy was estimated **3.30 percentage points above
-always-Womens**, with a bootstrap 95% interval of **+1.97 to +4.80 points**.
-However, its estimated advantage over always-Mens was only **+0.23 points**,
-with an interval of **-0.84 to +1.27 points**. Therefore, the model did not
-demonstrate a statistically clear improvement over simply sending Mens E-Mail
-to everyone.
-
-The uplift model's ranking curves showed positive estimated incremental visits
-relative to all-control, but the largest gains occurred close to broad
-targeting rather than only in a small high-response group. The model's
-recommendations are modeled counterfactual estimates, not directly observed
-individual treatment effects.
+These are predictive results, not causal findings. A customer with a high
+predicted visit probability is not necessarily a customer who would be
+changed by receiving an email.
 
 ## 5. Business Recommendations
 
-Mens E-Mail is the appropriate current benchmark for broad promotional
-testing because it led on visits, conversions, revenue per assigned customer,
-and simple-policy visit rate. Future campaigns should retain a randomized
-No E-Mail holdout so incremental performance is measured directly. Personalized
-uplift targeting should remain an experimental challenger rather than replace
-the Mens policy: it exceeded all-control and always-Womens, but did not clearly
-beat always-Mens. Recent and historically higher-value customers are sensible
-segments for additional randomized tests, but not automatic exclusion rules.
-Finally, no profitability decision should be approved without campaign costs,
-margins, unsubscribe effects, and longer-term customer value.
+1. Use Mens E-Mail as the current simple benchmark because it led on visits,
+   conversions, and revenue per assigned customer in this experiment.
+2. Preserve a randomized No E-Mail holdout in future campaigns so incremental
+   performance can be measured directly.
+3. Use the introductory models for learning, prioritization, and planning
+   experiments rather than as proof of individual customer response.
+4. Do not approve a profitability decision without campaign costs, margins,
+   unsubscribe effects, and longer-term customer value.
+5. Validate any proposed customer segment or decision threshold in a new
+   randomized sample before operational use.
 
 ## 6. Limitations
 
-- The experiment measures one observed outcome per customer. The other
-  treatment outcomes are counterfactual and cannot be directly checked for the
-  same person.
-- Uplift estimates can reflect model misspecification, sampling noise, and
-  regularization. Different predicted uplift values do not prove causal
-  heterogeneity.
-- The held-out uplift evaluation used inverse-propensity weighting and
-  customer-level bootstrap intervals. It did not compare raw outcomes among
-  model-recommended and non-recommended customers, which would be misleading
-  because those groups need not be randomized.
-- The bootstrap quantifies evaluation-sample uncertainty but does not capture
-  every uncertainty from model choice, feature design, or future audience
-  changes.
+- The models predict visits but do not estimate individual treatment effects.
+- The available pretreatment features may not contain enough information for
+  strong customer-level prediction.
 - Revenue is highly zero-inflated and right-skewed. Average revenue is
   informative but not a complete financial evaluation.
 - The dataset does not provide campaign cost, gross margin, unsubscribe
-  behavior, repeat purchases, or long-term customer value. No ROI, savings, or
-  profitability claim is made.
+  behavior, repeat purchases, or long-term customer value.
+- The experiment is historical and may not represent a future audience or
+  channel mix.
 
 ## 7. Next Steps
 
-1. Run a prospective holdout experiment comparing broad Mens E-Mail with the
-   proposed uplift-targeting policy, while preserving a No E-Mail control.
-2. Predefine the primary outcome, policy comparison, sample size, and
-   decision threshold before opening the next test set.
-3. Capture email delivery, opens, clicks, unsubscribes, order margin, and
-   longer-term revenue so business value can be evaluated rather than visits
-   alone.
-4. Validate whether recent and high historical-value customer segments show
-   reproducible incremental treatment effects in a new randomized sample.
-5. Reassess the uplift model only after collecting a new test set; do not
-   repeatedly tune the model against the current held-out results.
+1. Predefine a primary outcome, decision threshold, and sample-size target for
+   a prospective follow-up experiment.
+2. Capture email delivery, opens, clicks, unsubscribes, order margin, and
+   longer-term revenue.
+3. Compare model-assisted targeting rules with simple benchmark policies in a
+   new randomized sample.
+4. Evaluate additional feature engineering and probability-threshold choices
+   using validation data only.
+5. Monitor model performance after deployment for drift and calibration.

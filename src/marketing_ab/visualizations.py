@@ -284,102 +284,6 @@ def _plot_roc_and_calibration(
     return roc_path, calibration_path
 
 
-def _plot_uplift_distributions(reports: Path, figures: Path) -> Path:
-    data = pd.read_csv(reports / "uplift_predictions.csv")
-    long = (
-        data[["uplift_mens_email", "uplift_womens_email"]]
-        .rename(
-            columns={"uplift_mens_email": "Mens E-Mail", "uplift_womens_email": "Womens E-Mail"}
-        )
-        .melt(var_name="treatment", value_name="estimated_uplift")
-    )
-    figure, axis = plt.subplots(figsize=FIGURE_SIZE)
-    sns.histplot(
-        data=long,
-        x="estimated_uplift",
-        hue="treatment",
-        palette=GROUP_COLORS,
-        bins=45,
-        element="step",
-        stat="density",
-        common_norm=False,
-        alpha=0.20,
-        ax=axis,
-    )
-    axis.axvline(0, color="black", linewidth=1)
-    axis.xaxis.set_major_formatter(lambda value, _: f"{value:.0%}")
-    axis.set(
-        title="Estimated treatment uplift distributions",
-        xlabel="Estimated visit uplift vs. No E-Mail",
-        ylabel="Density",
-    )
-    return _save(
-        figure,
-        figures / "10_predicted_uplift_distributions.png",
-        "Business question: Heterogeneity of model-estimated visit "
-        "effects for each promotional email.",
-    )
-
-
-def _plot_uplift_curves(reports: Path, figures: Path) -> Path:
-    data = pd.read_csv(reports / "uplift_ranking_curves.csv")
-    figure, axis = plt.subplots(figsize=FIGURE_SIZE)
-    for treatment, group in data.groupby("treatment", sort=False):
-        axis.plot(
-            group["target_fraction"],
-            group["qini_incremental_visit_rate"] * 100,
-            label=treatment,
-            color=GROUP_COLORS[treatment],
-            linewidth=2,
-        )
-    axis.axhline(0, color="black", linewidth=1)
-    axis.set(
-        title="Held-out uplift ranking curves",
-        xlabel="Fraction targeted",
-        ylabel="Incremental visit rate vs. all-control (percentage points)",
-    )
-    axis.legend(frameon=False)
-    return _save(
-        figure,
-        figures / "11_uplift_evaluation_curves.png",
-        "Business question: Whether predicted-uplift ranking "
-        "concentrates incremental visits near the top.",
-    )
-
-
-def _plot_policy_performance(reports: Path, figures: Path) -> Path:
-    data = pd.read_csv(reports / "uplift_policy_bootstrap_evaluation.csv")
-    labels = {
-        "always_no_email": "No E-Mail",
-        "always_mens_email": "Mens E-Mail",
-        "always_womens_email": "Womens E-Mail",
-        "model_highest_positive_uplift": "Model: positive uplift",
-        "model_highest_predicted_visit": "Model: highest probability",
-    }
-    data["label"] = data["policy"].map(labels)
-    figure, axis = plt.subplots(figsize=(10, 5.5))
-    order = data.sort_values("estimated_visit_rate")["label"]
-    plot_data = data.set_index("label").loc[order]
-    x = np.arange(len(plot_data))
-    values = plot_data["estimated_visit_rate"].to_numpy() * 100
-    lower = values - plot_data["bootstrap_ci_lower"].to_numpy() * 100
-    upper = plot_data["bootstrap_ci_upper"].to_numpy() * 100 - values
-    axis.errorbar(x, values, yerr=[lower, upper], fmt="o", capsize=5, color="#2E86AB", linewidth=2)
-    axis.set(
-        title="Estimated visit rate under targeting policies",
-        ylabel="IPW estimated visit rate (%)",
-        xticks=x,
-        xticklabels=order,
-    )
-    axis.tick_params(axis="x", rotation=20)
-    return _save(
-        figure,
-        figures / "12_targeting_policy_performance.png",
-        "Business question: Whether model targeting outperforms "
-        "simple policies on held-out randomized data.",
-    )
-
-
 def generate_all_figures(
     project_directory: Union[str, Path] = Path("."),
 ) -> Dict[str, Path]:
@@ -416,9 +320,6 @@ def generate_all_figures(
             root / "data" / "processed" / "hillstrom_validated.csv", figures
         ),
         "model_performance": _plot_model_performance(reports, figures),
-        "uplift_distributions": _plot_uplift_distributions(reports, figures),
-        "uplift_curves": _plot_uplift_curves(reports, figures),
-        "policy_performance": _plot_policy_performance(reports, figures),
     }
     roc_path, calibration_path = _plot_roc_and_calibration(
         root / "models", root / "data" / "processed" / "hillstrom.duckdb", figures
